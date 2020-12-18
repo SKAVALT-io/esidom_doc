@@ -1,0 +1,16 @@
+@startuml modifier utilisateur
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Modifier utilisateur
+fe -> m: PUT /user/{user_id}\n\
+Data: ???
+m -> ha: ???
+ha --> m: ???
+m --> fe: 200 - Ok
+fe --> u: Afficher utilisateur
+
+@enduml

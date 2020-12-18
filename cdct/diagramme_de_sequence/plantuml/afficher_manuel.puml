@@ -1,0 +1,15 @@
+@startuml afficher groupe
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Afficher un groupe
+fe -> m: GET /group/{group_id}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 200 - Ok
+fe --> u: Le groupe est affiché
+
+@enduml

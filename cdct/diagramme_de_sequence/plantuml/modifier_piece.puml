@@ -1,0 +1,19 @@
+@startuml modifier pièce
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Modifier pièce
+fe -> m: PUT /room/{room_id}\n\
+Data: {\n\
+  name: <String>,\n\
+  devices : <list>\n\
+}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 200 - Ok
+fe --> u: Afficher la pièce modifiée
+
+@enduml

@@ -1,0 +1,30 @@
+@startuml désappairer
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Supprimer objet connecté
+fe -> m: PATCH /device/{device_id}\nData: { activated: false}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 204 - No Content
+fe --> u: Objet supprimé
+
+u -> fe: Restaurer objet connecté
+fe -> m: PATCH /device/{device_id}\nData: { activated: true}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 204 - No Content
+m -> ha: Redemarrer ???
+m --> fe: Je vais redémarrer ???
+fe --> u: ESIDOM va redémarrer
+ha -> ha: Redémarrer
+fe -> m: get statut
+m -> ha: get statut
+ha --> m: response statut
+m --> fe: response statut
+fe --> u: Objet restauré
+
+@enduml

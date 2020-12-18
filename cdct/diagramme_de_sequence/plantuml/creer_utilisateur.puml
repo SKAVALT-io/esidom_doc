@@ -1,0 +1,19 @@
+@startuml créer utilisateur
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Créer un utilisateur
+fe -> m: POST /user\n\
+Data: {\n\
+  username: <String>,\n\
+  password: <String>\n\
+}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 201 - Created
+fe --> u: Afficher l'utilisateur
+
+@enduml

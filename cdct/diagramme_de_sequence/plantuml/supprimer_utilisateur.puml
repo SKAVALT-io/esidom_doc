@@ -1,0 +1,15 @@
+@startuml supprimer utilisateur
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Supprimer un utilisateur
+fe -> m: DELETE /user/{user_id}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 204 - No content
+fe --> u: L'utilisateur est supprimée
+
+@enduml

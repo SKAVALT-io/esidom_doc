@@ -1,0 +1,24 @@
+@startuml appairer
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+participant "Objet connecté" as o
+
+u -> fe: Appairer un objet z-wave
+u -> o: Activer mode inclusion
+fe -> m: POST /device\n\
+{\
+  protocol: "zwave"\
+}
+
+m -> ha: POST\n/api/services/zwave/add_node
+ha --> m: 200 - Ok
+m --> fe: 200 - Ok
+ha -> ha: Mode inclusion
+o --> ha: appairage
+ha --> m: WS: event device registry
+m --> fe: WS: device_created
+fe --> u: Objet appairé
+@enduml

@@ -1,0 +1,15 @@
+@startuml lister routines
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Lister les routines
+fe -> m: GET /automations
+m -> ha: ???
+ha --> m: ???
+m --> fe: 200 - Ok
+fe --> u: Les routines sont listées
+
+@enduml

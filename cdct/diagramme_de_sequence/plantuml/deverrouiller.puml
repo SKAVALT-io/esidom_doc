@@ -1,0 +1,19 @@
+@startuml déverrouiller l'application
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Déverrouiller l'application
+fe -> m: POST /auth\n\
+{\n\
+  username: <String>,\n\
+  paswword: <String>\n\
+}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 201 - Created
+fe --> u: L'application est verrouillée
+
+@enduml

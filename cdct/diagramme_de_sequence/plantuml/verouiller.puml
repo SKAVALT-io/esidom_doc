@@ -1,0 +1,18 @@
+@startuml verouiller l'application
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Verrouiller l'application
+fe -> m: DELETE /auth\n\
+{\n\
+  token: <String>\n\
+}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 204 - No content
+fe --> u: L'application est verrouillée
+
+@enduml

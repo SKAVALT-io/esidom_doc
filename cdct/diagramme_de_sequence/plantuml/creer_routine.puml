@@ -1,0 +1,15 @@
+@startuml Créer routine
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Créer une routine
+fe -> m: POST /automation\nData: ???
+m -> ha: ???
+ha --> m: ???
+m --> fe: 201 - Created
+fe --> u: Afficher la routine
+
+@enduml

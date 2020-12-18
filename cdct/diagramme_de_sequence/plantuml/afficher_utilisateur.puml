@@ -1,0 +1,15 @@
+@startuml afficher utilisateur
+
+actor "Utilisateur" as u
+participant "Esidom front-end" as fe
+participant "Esidom middleware" as m
+participant "Home Assistant" as ha
+
+u -> fe: Afficher un utilisateur
+fe -> m: Get /user/{user_id}
+m -> ha: ???
+ha --> m: ???
+m --> fe: 200 - Ok
+fe --> u: Afficher l'utilisateur créé
+
+@enduml
