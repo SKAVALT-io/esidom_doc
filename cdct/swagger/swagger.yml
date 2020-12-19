@@ -1,0 +1,787 @@
+openapi: 3.0.1
+info:
+  title: Swagger Esidom
+  description: ''
+  contact:
+    email: skavalt@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+paths:
+  /devices:
+    get:
+      tags:
+      - Device
+      summary: Get list of device
+      operationId: getDevices
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        401:
+          description: Unauthorized
+          content: {}
+  /device:
+    post:
+      tags:
+      - Device
+      summary: Add device
+      operationId: addDevice
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+        401:
+          description: Unauthorized
+          content: {}
+  /device/{deviceId}:
+    get:
+      tags:
+      - Device
+      summary: Find device by ID
+      description: Returns a single device
+      operationId: getDeviceById
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    put:
+      tags:
+      - Device
+      summary: Modify device by ID
+      operationId: modifyDeviceById
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Device'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    patch:
+      tags:
+      - Device
+      summary: Enable/Disable device by ID
+      operationId: activateDeviceById
+      parameters:
+      - name: deviceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+  /entities:
+    get:
+      tags:
+      - Entity
+      summary: Get list of entity
+      operationId: getEntities
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entity'
+        401:
+          description: Unauthorized
+          content: {}
+  /automations:
+    get:
+      tags:
+      - Automation
+      summary: Get list of automation
+      operationId: getAutomations
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Automation'
+        401:
+          description: Unauthorized
+          content: {}
+  /automation:
+    post:
+      tags:
+      - Automation
+      summary: Add a automation
+      operationId: addAutomations
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Automation'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Automation'
+        401:
+          description: Unauthorized
+          content: {}
+  /automation/{automationId}:
+    get:
+      tags:
+      - Automation
+      summary: Get list of Automation
+      operationId: getAutomationById
+      parameters:
+      - name: automationId
+        in: path
+        description: ID of automation to return
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Automation'
+        401:
+          description: Unauthorized
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    put:
+      tags:
+      - Automation
+      summary: Modify automation by ID
+      operationId: modifyAutomationById
+      parameters:
+      - name: automationId
+        in: path
+        description: ID of automation to modify
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Automation'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Automation'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    delete:
+      tags:
+      - Automation
+      summary: Delete automation by ID
+      description: Returns a single device
+      operationId: deleteAutomationById
+      parameters:
+      - name: automationId
+        in: path
+        description: ID of automation to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Automation'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+  /rooms:
+    get:
+      tags:
+      - Room
+      summary: Get list of room
+      operationId: getRooms
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+        401:
+          description: Unauthorized
+          content: {}
+  /room:
+    post:
+      tags:
+      - Room
+      summary: Create a room
+      operationId: addRoom
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Room'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+  /room/{roomId}:
+    get:
+      tags:
+      - Room
+      summary: Get room from Id
+      operationId: getRoomById
+      parameters:
+      - name: roomId
+        in: path
+        description: ID of room to return
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        401:
+          description: Unauthorized
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    put:
+      tags:
+      - Room
+      summary: Update room from Id
+      operationId: updateRoomById
+      parameters:
+      - name: roomId
+        in: path
+        description: ID of room to return
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Room'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    delete:
+      tags:
+      - Room
+      summary: Delete room by ID
+      operationId: deleteRoomById
+      parameters:
+      - name: roomId
+        in: path
+        description: ID of room to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+  /groups:
+    get:
+      tags:
+      - Group
+      summary: Get list of group
+      operationId: getGroups
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+        401:
+          description: Unauthorized
+          content: {}
+  /group:
+    post:
+      tags:
+      - Group
+      summary: Create a group
+      operationId: addGroup
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+  /group/{groupId}:
+    get:
+      tags:
+      - Group
+      summary: Get group from Id
+      operationId: getGroupById
+      parameters:
+      - name: groupId
+        in: path
+        description: ID of group to return
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        401:
+          description: Unauthorized
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    put:
+      tags:
+      - Group
+      summary: Update group from Id
+      operationId: updateGroupById
+      parameters:
+      - name: groupId
+        in: path
+        description: ID of group to modify
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    delete:
+      tags:
+      - Group
+      summary: Delete group by ID
+      operationId: deleteGroupbyId
+      parameters:
+      - name: roomId
+        in: path
+        description: ID of group to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+  /users:
+    get:
+      tags:
+      - User
+      summary: Get list of user
+      operationId: getUsers
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorized
+          content: {}
+  /user:
+    post:
+      tags:
+      - User
+      summary: Create a user
+      operationId: addUser
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+  /user/{userId}:
+    get:
+      tags:
+      - User
+      summary: Get user from Id
+      operationId: getUserById
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to return
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorized
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    put:
+      tags:
+      - User
+      summary: Update user from Id
+      operationId: updateUserById
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to modify
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+    delete:
+      tags:
+      - User
+      summary: Delete user by ID
+      operationId: deleteUserbyId
+      parameters:
+      - name: userId
+        in: path
+        description: ID of user to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        model:
+          type: string
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entity'
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+        entity_id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        model:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties: {}
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+        username:
+          type: string
+        admin:
+          type: boolean
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+    Room:
+      type: object
+      properties:
+        room_id:
+          type: string
+        name:
+          type: string
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+        automation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+    Group:
+      type: object
+      properties:
+        group_id:
+          type: string
+        name:
+          type: string
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+    Automation:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        trigger:
+          type: array
+          items:
+            type: object
+        condition:
+          type: array
+          items:
+            type: object
+        action:
+          type: array
+          items:
+            type: object
