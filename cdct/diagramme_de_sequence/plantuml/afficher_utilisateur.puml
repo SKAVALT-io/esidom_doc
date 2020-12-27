@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Afficher un utilisateur
 fe -> m: Get /user/{user_id}
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS:  {type: "config/auth/list"}
+ha --> m: WS: {type: "result", success: true,…}
 m --> fe: 200 - Ok
 fe --> u: Afficher l'utilisateur créé
 

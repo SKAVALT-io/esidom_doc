@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Créer une pièce
 fe -> m: POST /room
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS; {type: "config/area_registry/create", name: "room_name"}
+ha --> m: WS: {type: "result", success: true, result: {area_id: "{room_id}", name: "{room_name}"}}
 m --> fe: 201 - Created
 fe --> u: Afficher la pièce
 

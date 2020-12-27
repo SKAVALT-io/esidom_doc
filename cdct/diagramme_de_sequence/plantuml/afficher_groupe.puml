@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Afficher un groupe
 fe -> m: GET /group/{group_id}
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS:  {type: "get_states"}
+ha --> m: WS: {entity_id: "group.{entity_name}", state: "off",…}
 m --> fe: 200 - Ok
 fe --> u: Le groupe est affiché
 

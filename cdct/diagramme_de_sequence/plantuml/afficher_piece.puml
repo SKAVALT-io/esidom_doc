@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Afficher une pièce
 fe -> m: GET /room/{room_id}
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS : {type: "search/related", item_type: "area", item_id: "chambre"}
+ha --> m: WS : {type: "result", success: true,…}
 m --> fe: 200 - Ok
 fe --> u: La pièce est affichée
 

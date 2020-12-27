@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Supprimer une pièce
 fe -> m: DELETE /room/{room_id}
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS: {type: "config/area_registry/delete", area_id: "{room_id}"}
+ha --> m: WS: {type: "result", success: true, result: "success"}
 m --> fe: 204 - No content
 fe --> u: La pièce est supprimée
 

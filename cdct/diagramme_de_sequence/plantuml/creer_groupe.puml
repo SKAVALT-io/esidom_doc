@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Créer une pièce
 fe -> m: POST /group
-m -> ha: ???
-ha --> m: ???
+m -> ha: POST /api/services/group/set
+ha --> m: 200 - Ok
 m --> fe: 201 - Created
 fe --> u: Afficher le groupe
 
