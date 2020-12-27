@@ -93,10 +93,14 @@ paths:
         schema:
           type: string
       requestBody:
+        required: true
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/Device'
+              type: object
+              properties:
+                name:          
+                  type: string
       responses:
         200:
           description: OK
@@ -127,6 +131,15 @@ paths:
         required: true
         schema:
           type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                activated:          
+                  type: string
       responses:
         204:
           description: OK
