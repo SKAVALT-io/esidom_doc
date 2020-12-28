@@ -6,13 +6,12 @@ participant "Esidom middleware" as m
 participant "Home Assistant" as ha
 
 u -> fe: Modifier groupe
-fe -> m: PUT /group/{group_id}
-Data: {\n\
+fe -> m: PUT /group/{group_id} Data: {\n\
   name: <String>,\n\
   devices : <list>\n\
 }
-m -> ha: ???
-ha --> m: ???
+m -> ha: POST /api/services/group/set
+ha --> m: 200 - Ok
 m --> fe: 200 - Ok
 fe --> u: Afficher le groupe modifié
 
