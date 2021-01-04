@@ -7,15 +7,15 @@ participant "Home Assistant" as ha
 
 u -> fe: Supprimer objet connecté
 fe -> m: PATCH /device/{device_id}\nData: { activated: false}
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS: {type: "config/device_registry/update", device_id: "{device_id}",disabled_by: "user"}
+ha --> m: WS: {type: "result", success: true,...}
 m --> fe: 204 - No Content
 fe --> u: Objet supprimé
 
 u -> fe: Restaurer objet connecté
 fe -> m: PATCH /device/{device_id}\nData: { activated: true}
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS: {type: "config/device_registry/update", device_id: "{device_id}",disabled_by: "null"}
+ha --> m: WS: {type: "result", success: true,...}
 m --> fe: 204 - No Content
 m -> ha: Redemarrer ???
 m --> fe: Je vais redémarrer ???

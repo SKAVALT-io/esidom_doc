@@ -11,9 +11,13 @@ fe -> m: POST /auth\n\
   username: <String>,\n\
   paswword: <String>\n\
 }
-m -> ha: ???
-ha --> m: ???
+m -> ha: POST /auth/login_flow
+ha --> m: 200 - Ok \n{\n"flow_id": "{flow_id}"\n}
+m -> ha: POST /auth/login_flow/{flow_id} \n {\n"username":"{username}",\n"password":"{password}"\n}
+ha --> m: 200 - Ok \n { \n "result": "{result_auth}"\n}
+m -> ha: POST /auth/token \n FormData :\ncode:{result_auth}\ngrant_type:authorization_code
+ha --> m: 200 - Ok \n {\n "access_token":"{access_token}"\n}
 m --> fe: 201 - Created
-fe --> u: L'application est verrouillée
+fe --> u: L'application est déverrouiller
 
 @enduml
