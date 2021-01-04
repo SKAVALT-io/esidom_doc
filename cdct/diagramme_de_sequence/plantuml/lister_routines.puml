@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Lister les routines
 fe -> m: GET /automations
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS: {type: "get_states"}
+ha --> m: WS: {type: "result", success: true, result: []}
 m --> fe: 200 - Ok
 fe --> u: Les routines sont listées
 
