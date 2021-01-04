@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Supprimer un utilisateur
 fe -> m: DELETE /user/{user_id}
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS: {type: "config/auth/delete", user_id: "{user_id}"}
+ha --> m: WS: {type: "result", success: true, result: null}
 m --> fe: 204 - No content
 fe --> u: L'utilisateur est supprimée
 

@@ -2,7 +2,7 @@
 
 actor "Utilisateur" as u
 participant "Esidom front-end" as fe
-participant "Esidom middleware" as m
+participant "Esidom serveur Backend" as m
 participant "Home Assistant" as ha
 
 u -> fe: Modifier pièce
@@ -11,8 +11,10 @@ Data: {\n\
   name: <String>,\n\
   devices : <list>\n\
 }
-m -> ha: ???
-ha --> m: ???
+m -> ha: WS: {type: "config/area_registry/update", area_id: "{area_id}", name: "{new_name}"}
+ha --> m: WS: {type: "result", success: true, result: {area_id: "{area_id}", name: "{new_name}"}}
+m -> ha: WS: {type: "config/device_registry/update", device_id: "{device_id}",area_id: "{area_id}"}
+ha --> m: WS: {type: "result", success: true,…}
 m --> fe: 200 - Ok
 fe --> u: Afficher la pièce modifiée
 
