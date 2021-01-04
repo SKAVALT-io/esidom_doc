@@ -7,8 +7,8 @@ participant "Home Assistant" as ha
 
 u -> fe: Supprimer la routine
 fe -> m: DELETE /automation/{automation_id}
-m -> ha: ???
-ha --> m: ???
+m -> ha: DELETE /api/config/automation/config/{automation_id}
+ha --> m: 200 - Ok
 m --> fe: 204 - No content
 fe --> u: La routine est supprimée
 

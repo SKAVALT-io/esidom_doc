@@ -8,8 +8,8 @@ participant "Home Assistant" as ha
 u -> fe: Modifier routine
 fe -> m: PUT /automation/{automation_id}\n\
 Data: ???
-m -> ha: ???
-ha --> m: ???
+m -> ha: POST /api/config/automation/config/{automation_id}
+ha --> m: 200 - Ok
 m --> fe: 200 - Ok
 fe --> u: Afficher routine
 

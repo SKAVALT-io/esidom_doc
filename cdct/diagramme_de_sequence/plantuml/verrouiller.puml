@@ -1,4 +1,4 @@
-@startuml verouiller l'application
+@startuml verrouiller l'application
 
 actor "Utilisateur" as u
 participant "Esidom front-end" as fe
@@ -10,8 +10,8 @@ fe -> m: DELETE /auth\n\
 {\n\
   token: <String>\n\
 }
-m -> ha: ???
-ha --> m: ???
+m -> ha: POST /auth/token \n formdata {action: revoke token: {token}}
+ha --> m: 200 - Ok
 m --> fe: 204 - No content
 fe --> u: L'application est verrouillée
 
