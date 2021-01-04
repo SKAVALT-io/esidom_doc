@@ -2,7 +2,7 @@
 
 actor "Utilisateur" as u
 participant "Esidom front-end" as fe
-participant "Esidom middleware" as m
+participant "Esidom back-end" as m
 participant "Home Assistant" as ha
 
 u -> fe: Supprimer objet connecté
@@ -17,14 +17,14 @@ fe -> m: PATCH /device/{device_id}\nData: { activated: true}
 m -> ha: WS: {type: "config/device_registry/update", device_id: "{device_id}",disabled_by: "null"}
 ha --> m: WS: {type: "result", success: true,...}
 m --> fe: 204 - No Content
-m -> ha: Redemarrer ???
-m --> fe: Je vais redémarrer ???
+m -> ha: WS: Redémarrer
+m --> fe: WS: Je vais redémarrer
 fe --> u: ESIDOM va redémarrer
 ha -> ha: Redémarrer
-fe -> m: get statut
-m -> ha: get statut
-ha --> m: response statut
-m --> fe: response statut
+fe -> m: WS: Demande statut
+m -> ha: WS: Demande statut
+ha --> m: WS: Réponse statut
+m --> fe: WS: Réponse statut
 fe --> u: Objet restauré
 
 @enduml
