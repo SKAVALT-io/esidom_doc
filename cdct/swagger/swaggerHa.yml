@@ -9,15 +9,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 
-# todo : 
-#   - supprimer_groupe
-#   - modifier_utilisateur
-#   - modifier_informations_objet 
-#   - modifier_routine --> request body + return (?)
-#   - modifier_etats_entite
-#   - get_manuel
-#   - post automation body
-
+################################### AUTH ################################### 
 paths:
   /auth/login_flow:
     post:
@@ -109,8 +101,9 @@ paths:
       responses:
         200:
           description: Ok
-          
-  /WebSocket/group:
+
+################################### GROUP ###################################          
+  /websocket/group:
     get:
       tags:
       - Group
@@ -143,7 +136,115 @@ paths:
                   result:
                     type: string
                     default: null
-  /WebSocket/group/list:
+    delete:
+      tags:
+        - Group
+      summary: Delete a group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: call_service
+                domain:
+                  type: string
+                  default: group
+                service:
+                  type: string
+                  default: remove
+                service_data:
+                  type: object
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: result
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: array
+                    items:
+                      type: string
+        400:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: result
+                  success:
+                    type: boolean
+                    default: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    
+  /api/services/group/set/<new>:
+    post:
+      tags:
+      - Group
+      summary: Create group
+      description: Create a group. Since HA doesnt keep them in memory after a restart, we must keep the groups list locally, and send them to HA after every restart (can also be done using websocket).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                object_id:
+                  type: string
+                name:
+                  type: string
+                entities:
+                  type: string
+                  
+      responses:
+        200:
+          description: Ok
+
+  /api/services/group/set:
+    post:
+      tags:
+        - Group
+      summary: "Update group"
+      requestBody:
+        description: "TODO : check if valid"
+        required: true
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                name:
+                  type: string
+                devices:
+                  type: array
+                  items: 
+                    type: string
+      responses:
+        200:
+          description: "Group updated (OK)"
+  
+  /websocket/group/list:
     get:
       tags:
         - Group
@@ -177,7 +278,18 @@ paths:
                     items:
                       type: string
 
-  /WebSocket/device:
+################################### DEVICE ###################################
+# Add device with Zwave 
+  /api/services/zwave/add_node:
+    post:
+      tags:
+      - Device
+      summary: Get device             
+      responses:
+        200:
+          description: Ok
+
+  /websocket/device:
     get:
       tags:
       - Device
@@ -217,7 +329,85 @@ paths:
                   result:
                     type: string
                     default: null
-  /WebSocket/device/list:
+    patch:
+      tags:
+        - Device
+      summary: Update device informations
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: config/device_registry/update
+                device_id:
+                  type: string
+                name_by_user:
+                  type: string
+                area_id:
+                  type: string
+                  nullable: true
+                disabled_by:
+                  type: string
+                  nullable: true
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: result
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: object
+                    properties:
+                      config_entries:
+                        type: array
+                        items:
+                          type: string
+                      connections:
+                        type: array
+                        items:
+                          type: string
+                      manufacturer:
+                        type: string
+                      model:
+                        type: string
+                      name:
+                        type: string
+                      sw_version:
+                        type: string
+                        nullable: true
+                      entry_type:
+                        type: string
+                        nullable: true
+                      id: 
+                        type: string
+                      identifiers:
+                        type: array
+                        items:
+                          type: string
+                      via_device_id:
+                        type: string
+                      area_id:
+                        type: string
+                        nullable: true
+                      name_by_user:
+                        type: string
+                      disabled_by:
+                        type: string
+                        nullable: true
+
+  /websocket/device/list:
     get:
       tags:
         - Device
@@ -250,8 +440,176 @@ paths:
                     type: array
                     items:
                       type: string
+  /websocket/device/delete:
+    delete:
+      summary: Delete device (with Websocket)
+      tags:
+        - Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/device_registry/update"
+                device_id: 
+                  type: string
+                  default: "{device_id}"
+                disabled_by:
+                  type: string
+                  default: "{user_name}"
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type: 
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: array
+                    items:
+                      type: string
+  /websocket/device/restore:
+    patch:
+      summary: Restore a deleted device (websocket)
+      tags:
+        - Device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/device_registry/update"
+                device_id:
+                  type: string
+                  default: "{device_id}"
+                disabled_by: 
+                  type: string
+                  default: null
+      responses:
+        200:
+          description: Device restored (websocket)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: "true"
+                  result:
+                    type: array
+                    items:
+                      type: string
+      
+################################### USER ###################################
+  /websocket/user/<create_step1>:
+    post:
+      tags:
+        - User
+      summary: Create an user (websocket). Step 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/auth/create"
+                name: 
+                  type: string
+                  default: "{user_id}"
+                group_ids: 
+                  type: array
+                  items:
+                    type: string
+                    default: "system-users"
+      responses:
+        200:
+          description: OK (websocket)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result: 
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              default: "{user_id}"
+  /websocket/user/<create_step2>:
+    post:
+      tags:
+        - User
+      summary: Create an user (websocket). Step 2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/auth_provider/homeassistant/create"
+                user_id: 
+                  type: string
+                  default: "{user_id}"
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: OK (websocket)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result: 
+                    type: array
+                    default: null
 
-  /WebSocket/user:
+
+  /websocket/user:
     delete:
       tags:
         - User
@@ -284,8 +642,6 @@ paths:
                   result:
                     type: string
                     default: null
-
-  /WebSocket/user/list:
     get:
       tags:
         - User
@@ -318,8 +674,49 @@ paths:
                     type: array
                     items:
                       type: string
+    patch:
+      tags:
+        - User
+      summary: "Update user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                group_ids: 
+                  type: string
+                is_active: 
+                  type: boolean
+                name: 
+                  type: string
+                type: 
+                  type: string 
+                  default: "config/auth/update"
+                user_id: 
+                  type: string
+      responses:
+        200:
+          description: "Users listed (websocket response)"
 
+################################### AUTOMATION ###################################
   /api/config/automation/config/{automation_id}:
+    get:
+      summary: "Get automation"
+      tags:
+        - Automation
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "OK"
+    
+      
     delete:
       summary: "Delete automation"
       tags:
@@ -333,7 +730,7 @@ paths:
       responses:
         200:
           description: "Automation deleted (OK)"
-    post:
+    patch:
       summary: "Update automation"
       tags:
         - Automation
@@ -351,11 +748,122 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                id:
+                  type: string
+                alias:
+                  type: string
+                description:
+                  type: string
+                trigger:
+                  type: array
+                  items: 
+                    type: object
+                    properties:
+                      platform:
+                        type: string
+                      event_type:
+                        type: string
+                      event_data:
+                        type: object
+                condition:
+                  type: array
+                  items:
+                    type: string
+                action:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      device_id:
+                        type: string
+                      entity_id:
+                        type: string
+                      domain:
+                        type: string
+                mode:
+                  type: string
+                  default: single       
       responses:
         200:
           description: "Automation updated (OK)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    default: ok
+    post:
+      summary: "Create automation"
+      tags:
+        - Automation
+      description: "Create an automation"
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: false
+        description: TODO
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                alias:
+                  type: string
+                description:
+                  type: string
+                trigger:
+                  type: array
+                  items: 
+                    type: object
+                    properties:
+                      platform:
+                        type: string
+                      event_type:
+                        type: string
+                      event_data:
+                        type: object
+                condition:
+                  type: array
+                  items:
+                    type: string
+                action:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      device_id:
+                        type: string
+                      entity_id:
+                        type: string
+                      domain:
+                        type: string
+                mode:
+                  type: string
+                  default: single       
+      responses:
+        200:
+          description: "Automation created (OK)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    default: ok
 
-  /WebSocket/automation/list:
+  /websocket/automation/list:
     get:
       tags:
         - Automation
@@ -389,7 +897,8 @@ paths:
                     items:
                       type: string
 
-  /WebSocket/room/delete:
+################################### ROOM ###################################
+  /websocket/room/delete:
     delete:
       tags:
         - Room
@@ -423,7 +932,7 @@ paths:
                     type: string
                     default: "success"
 
-  /WebSocket/room/updateName:
+  /websocket/room/updateName:
     put:
       tags:
         - Room
@@ -466,7 +975,7 @@ paths:
                     type: string
                     default: "{new_name}"
 
-  /WebSocket/room/updateDevices:
+  /websocket/room/updateDevices:
     put:
       tags:
         - Room
@@ -501,7 +1010,7 @@ paths:
                   result:
                     type: object
          
-  /WebSocket/room/:
+  /websocket/room/:
     get:
       tags:
       - Room
@@ -541,7 +1050,43 @@ paths:
                   result:
                     type: string
                     default: null
-  /WebSocket/room/list:
+    post:
+      tags:
+      - Room
+      summary: Create room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                types:
+                  type: string
+                  default:
+                    "config/area_registry/create"
+                name:
+                  type: string
+                  default:
+                    "area"
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: string
+                    default: null
+  /websocket/room/list:
     get:
       tags:
         - Room
@@ -575,30 +1120,57 @@ paths:
                     items:
                       type: string
 
-  /api/services/group/set:
+################################### ENTITY ###################################
+  /websocket/entity:
     post:
       tags:
-        - Group
-      summary: "Update group"
+        - Entity
+      summary: "Update entity state"
       requestBody:
-        description: "TODO : check if valid"
         required: true
         content:
           application/json:
-            schema: 
+            schema:
               type: object
               properties:
-                name:
+                type:
                   type: string
-                devices:
-                  type: array
-                  items: 
-                    type: string
+                  default: call_service
+                domain:
+                  type: string
+                  default: light
+                service:
+                  type: string
+                  default: turn_off
+                service_data:
+                  type: object
+                  properties:
+                    entity_id:
+                      type: string
       responses:
         200:
-          description: "Group updated (OK)"
-
-  /WebSocket/entity/list:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: result
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      parent_id:
+                        type: string
+                        nullable: true
+                      user_id:
+                        type: string
     get:
       tags:
         - Entity
@@ -631,6 +1203,134 @@ paths:
                     type: array
                     items:
                       type: string
+    patch:
+      tags:
+        - Entity
+      summary: Disable an entity (websocket)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/entity_registry/update"
+                entity_id:
+                  type: string
+                  default: "{entity_id}"
+                name:
+                  type: string
+                  nullable: true
+                icon:
+                  type: string
+                  nullable: true
+                area_id:
+                  type: string
+                  nullable: true
+                new_entity_id:
+                  type: string
+                  default: "{entity_id}"
+                disabled_by:
+                  type: string
+                  default: "user"
+      responses:
+        200:
+          description: OK (via websocket)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: object
+                    properties:
+                      entity_entry:
+                        type: object
+                        properties:
+                          config_entry_id:
+                            type: string
+                          device_id:
+                            type: string
+                          area_id: 
+                            type: string
+                            nullable: true
+                          disabled_by:
+                            type: string
+                            default: user
+                          entity_id:
+                            type: string
+                            default: "{entity_id}"
+                          name:
+                            type: string
+                            nullable: true
+                          icon:
+                            type: string
+                            nullable: true
+                          platform:
+                            type: string
+                          original_name:
+                            type: string
+                          original_icon:
+                            type: string
+                          unique_id:
+                            type: string
+                          capabilities:
+                            type: object
+
+################################### System ###################################
+  /websocket/system/restart:
+    post:
+      tags:
+        - System
+      summary: "Restart system "
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "call_service"
+                domain:
+                  type: string
+                  default: "homeassisatant"
+                service:
+                  type: string
+                  default: "restart"
+      responses:
+        200:
+          description: "Automations listed (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: object
+                    properties:
+                      id: 
+                        type: string
+                      parent_id:
+                        type: string
+                      user_id:
+                        type: string
+                        
 
           
 components:
