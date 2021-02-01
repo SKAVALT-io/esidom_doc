@@ -10,7 +10,7 @@ Une "automation" écrite en .yml chez HA possède les clefs suivantes :
 
 - condition : https://www.home-assistant.io/docs/scripts/conditions/
 
-- action : Peut appeler un service ou une scène, la liste des services peut se trouver dans HA -> Outil de développement -> Services. [doc ici](https://www.home-assistant.io/docs/automation/action/).
+- action : on peut appeler un service ou une scène, la liste des services peut se trouver dans HA -> Outil de développement -> Services. [doc ici](https://www.home-assistant.io/docs/automation/action/).
 
 Exemple : 
 
