@@ -12,10 +12,84 @@ info:
 # todo : 
 #   - supprimer_groupe
 #   - modifier_utilisateur
-paths:
- 
+#   - modifier_informations_objet 
+#   - modifier_routine --> request body + return (?)
+#   - modifier_etats_entite
+#   - get_manuel
+#   - post automation body
 
+paths:
+  /auth/login_flow:
+    post:
+      tags:
+        - Auth
+      summary: "Get flow id"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flow_id:
+                    type: string
+  /auth/login_flow/{flow_id}:
+    post:
+      tags:
+        - Auth
+      summary: "Get auth result"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
   /auth/token:
+    post:
+      tags:
+        - Auth
+      summary: Get access token for user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code: 
+                  type: string
+                  default: " {result_auth}"
+                grant_type:
+                  type: string
+                  default: "authorization_code"
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    default: "{access_token}"
+  /auth/token/<remove>:
     post:
       tags:
       - Auth
@@ -32,9 +106,6 @@ paths:
                   default: "revoke"
                 token:
                   type: string
-              required:
-                - action
-                - token
       responses:
         200:
           description: Ok
@@ -54,8 +125,7 @@ paths:
                 types:
                   type: string
                   default:
-                    "get_states"
-              
+                    "get_states"      
       responses:
         200:
           description: Ok
@@ -73,6 +143,40 @@ paths:
                   result:
                     type: string
                     default: null
+  /WebSocket/group/list:
+    get:
+      tags:
+        - Group
+      summary: "List groups"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "get_states"
+      responses:
+        200:
+          description: "Groups listed (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: array
+                    items:
+                      type: string
+
   /WebSocket/device:
     get:
       tags:
@@ -85,7 +189,7 @@ paths:
             schema:
               type: object
               properties:
-                types:
+                type:
                   type: string
                   default:
                     "search/related"
@@ -113,7 +217,39 @@ paths:
                   result:
                     type: string
                     default: null
-            
+  /WebSocket/device/list:
+    get:
+      tags:
+        - Device
+      summary: "List devices"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/device_registry/list"
+      responses:
+        200:
+          description: "Devices listed (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: array
+                    items:
+                      type: string
 
   /WebSocket/user:
     delete:
@@ -148,10 +284,44 @@ paths:
                   result:
                     type: string
                     default: null
-                
+
+  /WebSocket/user/list:
+    get:
+      tags:
+        - User
+      summary: "List users"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/auth/list"
+      responses:
+        200:
+          description: "Users listed (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: array
+                    items:
+                      type: string
+
   /api/config/automation/config/{automation_id}:
-    summary: "Delete automation"
     delete:
+      summary: "Delete automation"
       tags:
         - Automation
       parameters:
@@ -168,6 +338,12 @@ paths:
       tags:
         - Automation
       description: "Update an automation"
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         required: false
         description: TODO
@@ -178,6 +354,40 @@ paths:
       responses:
         200:
           description: "Automation updated (OK)"
+
+  /WebSocket/automation/list:
+    get:
+      tags:
+        - Automation
+      summary: "List automations"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "get_states"
+      responses:
+        200:
+          description: "Automations listed (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: array
+                    items:
+                      type: string
 
   /WebSocket/room/delete:
     delete:
@@ -290,9 +500,7 @@ paths:
                     default: true
                   result:
                     type: object
-                    
-  
-
+         
   /WebSocket/room/:
     get:
       tags:
@@ -333,6 +541,98 @@ paths:
                   result:
                     type: string
                     default: null
+  /WebSocket/room/list:
+    get:
+      tags:
+        - Room
+      summary: "List rooms"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/area_registry/list"
+      responses:
+        200:
+          description: "Automations listed (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: array
+                    items:
+                      type: string
+
+  /api/services/group/set:
+    post:
+      tags:
+        - Group
+      summary: "Update group"
+      requestBody:
+        description: "TODO : check if valid"
+        required: true
+        content:
+          application/json:
+            schema: 
+              type: object
+              properties:
+                name:
+                  type: string
+                devices:
+                  type: array
+                  items: 
+                    type: string
+      responses:
+        200:
+          description: "Group updated (OK)"
+
+  /WebSocket/entity/list:
+    get:
+      tags:
+        - Entity
+      summary: "List entities"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "get_states"
+      responses:
+        200:
+          description: "Entities listed (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: array
+                    items:
+                      type: string
+
+          
 components:
   schemas:
     Device:
