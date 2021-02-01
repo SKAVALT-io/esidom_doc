@@ -10,7 +10,7 @@ Une "automation" écrite en .yml chez HA possède les clefs suivantes :
 
 - condition : https://www.home-assistant.io/docs/scripts/conditions/
 
-- action : condition, délai, appareil, déclencher l'évènement, activer la scène, appeler un service, attendre, attendre le déclencheur, répéter, choisir ... (ça reste pas super bien documenté : https://www.home-assistant.io/docs/automation/action/)
+- action : Peut appeler un service ou une scène, la liste des services peut se trouver dans HA -> Outil de développement -> Services. [doc ici](https://www.home-assistant.io/docs/automation/action/).
 
 Exemple : 
 
@@ -23,8 +23,6 @@ automation test:
     platform: time
     at: "14:00:00"
   action:
-    type: toggle
-    device_id: 7eff4354848387b1af05b2d481217d6c
+    service: light.toggle
     entity_id: light.zipato_bulb_2_level
-    domain: light
 ```
