@@ -10,6 +10,48 @@ info:
   version: 1.0.0
 
 paths:
+  /auth:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+    delete:
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+      responses:
+        204:
+          description: No content
+
+
   /devices:
     get:
       tags:
@@ -311,7 +353,7 @@ paths:
     get:
       tags:
       - Automation
-      summary: Get list of Automation
+      summary: Get Automation by ID
       operationId: getAutomationById
       parameters:
       - name: automationId
@@ -373,7 +415,7 @@ paths:
       tags:
       - Automation
       summary: Delete automation by ID
-      description: Returns a single device
+      description: Delete an automation by id
       operationId: deleteAutomationById
       parameters:
       - name: automationId
@@ -385,10 +427,6 @@ paths:
       responses:
         200:
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Automation'
         400:
           description: Invalid ID supplied
           content: {}
@@ -480,7 +518,7 @@ paths:
       parameters:
       - name: roomId
         in: path
-        description: ID of room to return
+        description: ID of room to update
         required: true
         schema:
           type: string
@@ -520,10 +558,6 @@ paths:
       responses:
         200:
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Room'
         400:
           description: Invalid ID supplied
           content: {}
@@ -615,7 +649,7 @@ paths:
       parameters:
       - name: groupId
         in: path
-        description: ID of group to modify
+        description: ID of group to update
         required: true
         schema:
           type: string
@@ -655,10 +689,6 @@ paths:
       responses:
         200:
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Group'
         400:
           description: Invalid ID supplied
           content: {}
@@ -693,7 +723,7 @@ paths:
     post:
       tags:
       - User
-      summary: Create a user
+      summary: Create an user
       operationId: addUser
       responses:
         200:
@@ -745,7 +775,7 @@ paths:
       parameters:
       - name: userId
         in: path
-        description: ID of user to modify
+        description: ID of user to update
         required: true
         schema:
           type: string
@@ -785,10 +815,6 @@ paths:
       responses:
         200:
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Group'
         400:
           description: Invalid ID supplied
           content: {}
@@ -797,6 +823,36 @@ paths:
           content: {}
         403:
           description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content: {}
+  
+  /manual/{ean}:
+    get:
+      tags:
+      - Manual
+      summary: Get manual from EAN product
+      parameters:
+      - name: ean
+        in: path
+        description: ean of product
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+              
+        400:
+          description: Invalid EAN supplied
           content: {}
         404:
           description: Not found
