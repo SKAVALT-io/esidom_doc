@@ -1,0 +1,430 @@
+openapi: 3.0.1
+info:
+  title: Swagger HA
+  description: ''
+  contact:
+    email: skavalt@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+# todo : 
+#   - supprimer_groupe
+#   - modifier_utilisateur
+paths:
+ 
+
+  /auth/token:
+    post:
+      tags:
+      - Auth
+      summary: Remove user auth token (using formdata)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  default: "revoke"
+                token:
+                  type: string
+              required:
+                - action
+                - token
+      responses:
+        200:
+          description: Ok
+          
+  /WebSocket/group:
+    get:
+      tags:
+      - Group
+      summary: Get group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                types:
+                  type: string
+                  default:
+                    "get_states"
+              
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: string
+                    default: null
+  /WebSocket/device:
+    get:
+      tags:
+      - Device
+      summary: Get device
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                types:
+                  type: string
+                  default:
+                    "search/related"
+                item_type:
+                  type: string
+                  default:
+                    "device"
+                item_id:
+                  type: string
+                  
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: string
+                    default: null
+            
+
+  /WebSocket/user:
+    delete:
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type: 
+                  type: string
+                  default: "config/auth/delete"
+                user_id:
+                  type: string
+      responses:
+        200:
+          description: "User deleted (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: string
+                    default: null
+                
+  /api/config/automation/config/{automation_id}:
+    summary: "Delete automation"
+    delete:
+      tags:
+        - Automation
+      parameters:
+      - name: automation_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "Automation deleted (OK)"
+    post:
+      summary: "Update automation"
+      tags:
+        - Automation
+      description: "Update an automation"
+      requestBody:
+        required: false
+        description: TODO
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: "Automation updated (OK)"
+
+  /WebSocket/room/delete:
+    delete:
+      tags:
+        - Room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type: 
+                  type: string
+                  default: "config/area_registry/delete"
+                area_id:
+                  type: string
+      responses:
+        200:
+          description: "Room deleted (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: string
+                    default: "success"
+
+  /WebSocket/room/updateName:
+    put:
+      tags:
+        - Room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/area_registry/update"
+                area_id:
+                  type: string
+                name:
+                  type: string
+                  default: "{new_name}"
+      responses:
+        200:
+          description: "Room name updated (websocket response)"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: object
+                    properties:
+                      area_id:
+                        type: string
+                        default: "{area_id}"
+                  name:
+                    type: string
+                    default: "{new_name}"
+
+  /WebSocket/room/updateDevices:
+    put:
+      tags:
+        - Room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  default: "config/device_registry/update"
+                device_id:
+                  type: string
+                area_id:
+                  type: string
+      responses:
+        200:
+          description: "Room devices updated (websocket response) TODO: check result"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: object
+                    
+  
+
+  /WebSocket/room/:
+    get:
+      tags:
+      - Room
+      summary: Get room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                types:
+                  type: string
+                  default:
+                    "search/related"
+                item_type:
+                  type: string
+                  default:
+                    "area"
+                item_id:
+                  type: string
+                  
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    default: "result"
+                  success:
+                    type: boolean
+                    default: true
+                  result:
+                    type: string
+                    default: null
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        model:
+          type: string
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Entity'
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+        entity_id:
+          type: string
+        name:
+          type: string
+        type:
+          type: string
+        model:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            properties: {}
+    User:
+      type: object
+      properties:
+        user_id:
+          type: string
+        username:
+          type: string
+        admin:
+          type: boolean
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+    Room:
+      type: object
+      properties:
+        room_id:
+          type: string
+        name:
+          type: string
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+        automation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+    Group:
+      type: object
+      properties:
+        group_id:
+          type: string
+        name:
+          type: string
+        devices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+    Automation:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        trigger:
+          type: array
+          items:
+            type: object
+        condition:
+          type: array
+          items:
+            type: object
+        action:
+          type: array
+          items:
+            type: object
