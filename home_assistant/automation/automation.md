@@ -1,6 +1,6 @@
-# HA Automation .yml
+# HA Automation
 
-Une "automation" écrite en .yml chez HA possède les clefs suivantes : 
+Une "automation" écrite en chez HA possède les clefs suivantes : 
 
 - alias : nom de la routine
 
@@ -12,8 +12,29 @@ Une "automation" écrite en .yml chez HA possède les clefs suivantes :
 
 - action : on peut appeler un service ou une scène, la liste des services peut se trouver dans HA -> Outil de développement -> Services. [doc ici](https://www.home-assistant.io/docs/automation/action/).
 
-Exemple : 
+## Exemple .json :
+- On bascule la lampe zipato à 14h00 (pas de condition ici).
 
+```json
+{
+  "alias": "test 1",
+  "description": "test description",
+  "trigger": [
+    {
+      "platform": "time",
+      "at": "14:00:00"
+    }
+  ],
+  "action": [
+    {
+      "service": "light.toggle",
+      "entity_id": "light.zipato_bulb_2_level",
+    }
+  ]
+}
+```
+
+## Exemple .yml : 
 - On bascule la lampe zipato à 14h00 (pas de condition ici).
 ```yml
 automation test: 
