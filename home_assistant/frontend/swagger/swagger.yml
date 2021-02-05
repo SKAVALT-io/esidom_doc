@@ -284,12 +284,19 @@ paths:
           type: string
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/Entity'
+              type: object
+              properties:
+                service:
+                  type: string
+                  default: light.turn_on
+                serviceData:
+                  type: object
+                  default: { brightness: 35 }
       responses:
         200:
-          description: OK
+          description: OK (TODO check response)
           content:
             application/json:
               schema:
