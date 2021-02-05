@@ -52,7 +52,7 @@ paths:
           description: No content
 
 
-  /devices:
+  /device:
     get:
       tags:
       - Device
@@ -70,7 +70,6 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /device:
     post:
       tags:
       - Device
@@ -198,7 +197,7 @@ paths:
         404:
           description: Not found
           content: {}
-  /entities:
+  /entity:
     get:
       tags:
       - Entity
@@ -308,7 +307,7 @@ paths:
           description: Not found
           content: {}
   
-  /automations:
+  /automation:
     get:
       tags:
       - Automation
@@ -326,7 +325,6 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /automation:
     post:
       tags:
       - Automation
@@ -439,7 +437,7 @@ paths:
         404:
           description: Not found
           content: {}
-  /rooms:
+  /room:
     get:
       tags:
       - Room
@@ -457,7 +455,6 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /room:
     post:
       tags:
       - Room
@@ -570,7 +567,7 @@ paths:
         404:
           description: Not found
           content: {}
-  /groups:
+  /group:
     get:
       tags:
       - Group
@@ -588,7 +585,6 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /group:
     post:
       tags:
       - Group
@@ -678,7 +674,7 @@ paths:
       tags:
       - Group
       summary: Delete group by ID
-      operationId: deleteGroupbyId
+      operationId: deleteGroupById
       parameters:
       - name: roomId
         in: path
@@ -701,7 +697,7 @@ paths:
         404:
           description: Not found
           content: {}
-  /users:
+  /user:
     get:
       tags:
       - User
@@ -719,7 +715,6 @@ paths:
         401:
           description: Unauthorized
           content: {}
-  /user:
     post:
       tags:
       - User
@@ -804,7 +799,7 @@ paths:
       tags:
       - User
       summary: Delete user by ID
-      operationId: deleteUserbyId
+      operationId: deleteUserById
       parameters:
       - name: userId
         in: path
@@ -866,32 +861,40 @@ components:
           type: string
         name:
           type: string
-        type:
-          type: string
         model:
           type: string
+        nameByUser:
+          type: string
+          nullable: true
+        disableBy:
+          type: string
+          nullable: true
+        areaId:
+          type: string
+          nullable: true
         entities:
           type: array
           items:
             $ref: '#/components/schemas/Entity'
+        automations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Automation'
     Entity:
       type: object
       properties:
         id:
           type: string
-        entity_id:
-          type: string
         name:
           type: string
         type:
           type: string
-        model:
+        state:
           type: string
-        data:
+        attributes:
           type: array
           items:
             type: object
-            properties: {}
     User:
       type: object
       properties:

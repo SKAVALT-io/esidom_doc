@@ -284,7 +284,7 @@ paths:
     post:
       tags:
       - Device
-      summary: Get device             
+      summary: Pair new zwave device             
       responses:
         200:
           description: Ok
