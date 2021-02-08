@@ -469,9 +469,13 @@ paths:
       operationId: addRoom
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/Room'
+              type: object
+              properties:
+                name:
+                  type: string
+              
       responses:
         200:
           description: Ok
