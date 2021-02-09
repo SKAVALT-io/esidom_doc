@@ -203,6 +203,13 @@ paths:
       - Entity
       summary: Get list of entity
       operationId: getEntities
+      parameters:
+        - in: query
+          name: type
+          required: false
+          schema:
+            type: string
+          description: A device type used to filter the result ('light', 'sensor', ...)
       responses:
         200:
           description: Ok
@@ -215,6 +222,22 @@ paths:
         401:
           description: Unauthorized
           content: {}
+  /entity/types:
+    get:
+      tags:
+      - Entity
+      summary: Get a list of all entities types currently used in HA
+      operationId: getEntitiesTypes
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: string
+                default: ["person","sun","zone","binary_sensor","switch","sensor","automation","weather","media_player","light","zwave"]
   /entity/{entityId}:
     get:
       tags:
