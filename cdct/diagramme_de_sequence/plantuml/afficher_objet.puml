@@ -8,7 +8,12 @@ participant "Home Assistant" as ha
 u -> fe: Afficher objet
 fe -> m: GET /device/{device_id}
 m -> ha: WS : {type: "search/related", item_type: "device", item_id: "{device_id}"}
-ha --> m: WS : {type: "result", success: true,…}
+ha --> m: WS :\n {type: "result", success: true,\n  result:\n {\
+\n      area:["salon"],      \
+\n      automation: ["automation.nouvelle_automatisation_2"]\
+\n      config_entry: ["67a55a3af85a25e4985e34e6a0ec4cd4"], \
+\n      entity: ["sensor.oeil_fibaro_luminance", "sensor.oeil_fibaro_burglar", "sensor.oeil_fibaro_general"] \
+\n}}
 m --> fe: 200 - Ok
 fe --> u: Affiche les informations de l'objet
 
