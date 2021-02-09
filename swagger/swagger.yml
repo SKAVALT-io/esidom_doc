@@ -532,9 +532,18 @@ paths:
           type: string
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/Room'
+              type: object
+              properties:
+                room_id:
+                  type: string
+                name:
+                  type: string
+                devices:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Device'
       responses:
         200:
           description: Ok
@@ -933,7 +942,7 @@ components:
         automation:
           type: array
           items:
-            $ref: '#/components/schemas/Device'
+            $ref: '#/components/schemas/Automation'
     Group:
       type: object
       properties:
