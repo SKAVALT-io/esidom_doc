@@ -8,6 +8,8 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
+servers:
+  - url: 'http://domotique.3utilities.com:3000'
 
 paths:
   /auth:
