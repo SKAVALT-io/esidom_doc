@@ -906,6 +906,19 @@ paths:
         404:
           description: Not found
           content: {}
+
+  /service:
+    get:
+      tags: 
+      - Service
+      summary: Get available services to control devices
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
 components:
   schemas:
     Device:
@@ -1009,3 +1022,14 @@ components:
           type: array
           items:
             type: object
+    Service:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'light.turn_on'
+        fields:
+          type: array
+          items: 
+            type: string
+            example: 'entity_id'   
