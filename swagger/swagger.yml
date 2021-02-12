@@ -239,7 +239,7 @@ paths:
                 type: array
                 items: 
                   type: string
-                default: ["person","sun","zone","binary_sensor","switch","sensor","automation","weather","media_player","light","zwave"]
+                default: ["person","sun","zone","binary_sensor","switch","sensor","automation","weather","media_player","light","zwave", "persistent_notification" ]
   /entity/{entityId}:
     get:
       tags:
@@ -362,7 +362,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Automation'
+                  $ref: '#/components/schemas/AutomationPreview'
         401:
           description: Unauthorized
           content: {}
@@ -1010,6 +1010,8 @@ components:
           type: string
         description:
           type: string
+        state:
+          type: string
         trigger:
           type: array
           items:
@@ -1022,6 +1024,17 @@ components:
           type: array
           items:
             type: object
+        mode:
+          type: string
+    AutomationPreview:
+      type: object
+      properties:
+        id:
+          type: string
+        name: 
+          type: string
+        state:
+          type: string
     Service:
       type: object
       properties:
