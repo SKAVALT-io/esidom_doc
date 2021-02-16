@@ -239,7 +239,7 @@ paths:
                 type: array
                 items: 
                   type: string
-                default: ["person","sun","zone","binary_sensor","switch","sensor","automation","weather","media_player","light","zwave", "persistent_notification" ]
+                default: ["person","sun", "group", "zone","binary_sensor","switch","sensor","automation","weather","media_player","light","zwave", "persistent_notification" ]
   /entity/{entityId}:
     get:
       tags:
@@ -450,6 +450,31 @@ paths:
         404:
           description: Not found
           content: {}
+    patch:
+      tags:
+      - Automation
+      summary: Enable/Disable automation by ID
+      description: Enable/Disable automation by ID
+      parameters:
+      - name: automationId
+        in: path
+        description: ID of automation to enable/disable
+        required: true
+        schema:
+          type: string
+          example: 'automation.allumer_lampes'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                state:
+                  type: string
+                  example: 'on'
+      responses:
+        200:
+          description: OK 
     delete:
       tags:
       - Automation
