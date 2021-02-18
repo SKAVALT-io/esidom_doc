@@ -77,24 +77,28 @@ paths:
       - Device
       summary: Add device
       operationId: addDevice
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                protocol:          
-                  type: string
       responses:
         200:
-          description: Ok
+          description: OK (new device send via WS with event 'device_created'. Device schema is below)
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Device'
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name: 
+                    type: string
+                  model:
+                    type: string
+                  entities:
+                    type: array
+                    items:
+                      type: string
+                  automations:
+                    type: array
+                    items:
+                      type: string    
         401:
           description: Unauthorized
           content: {}
