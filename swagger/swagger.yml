@@ -475,6 +475,21 @@ paths:
       responses:
         200:
           description: OK 
+    post:
+      tags:
+      - Automation
+      summary: Trigger automation by id
+      description: Trigger automation by id
+      parameters:
+      - name: automationId
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 'automation.allumer_lampes'
+      responses:
+        200:
+          description: OK
     delete:
       tags:
       - Automation
