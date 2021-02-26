@@ -77,7 +77,6 @@ paths:
       - Device
       summary: Add device
       operationId: addDevice
-<<<<<<< HEAD
       responses:
         200:
           description: OK (new device send via WS with event 'device_created'. Device schema is below)
@@ -100,12 +99,6 @@ paths:
                     type: array
                     items:
                       type: string    
-=======
-
-      responses:
-        200:
-          description: Ok
->>>>>>> bbf6d685c5b46940713d91492a47f11c848e3559
         401:
           description: Unauthorized
           content: {}
@@ -493,11 +486,11 @@ paths:
       description: Trigger automation by id
       parameters:
       - name: automationId
-      in: path
-      required: true
-      schema:
-        type: string
-        example: 'automation.allumer_lampes'
+        in: path
+        required: true
+        schema:
+          type: string
+          example: 'automation.allumer_lampes'
       responses:
         200:
           description: OK
@@ -825,6 +818,23 @@ paths:
       - User
       summary: Create an user
       operationId: addUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: 
+                    string
+                admin:
+                  type:
+                    boolean
+                entities:
+                  type: array
+                  nullable: true
+                  items:
+                    type: string
       responses:
         200:
           description: Ok
@@ -881,9 +891,23 @@ paths:
           type: string
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              type: object
+              properties:
+                username:
+                  type: 
+                    string
+                  nullable: true
+                admin:
+                  type:
+                    boolean
+                  nullable: true
+                entities:
+                  type: array
+                  nullable: true
+                  items:
+                    type: string
       responses:
         200:
           description: Ok
@@ -1016,16 +1040,17 @@ components:
     User:
       type: object
       properties:
-        user_id:
-          type: string
+        id:
+          type: number
         username:
           type: string
         admin:
           type: boolean
-        devices:
+        entities:
           type: array
           items:
-            $ref: '#/components/schemas/Device'
+            type:
+              string
     Room:
       type: object
       properties:
