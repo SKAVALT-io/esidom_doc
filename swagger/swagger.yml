@@ -13,350 +13,34 @@ servers:
 
 paths:
   /auth:
-    post:
+    get:
       tags:
         - Auth
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
       responses:
-        201:
-          description: Created
+        200:
+          # description: Ok
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  token:
+                  message:
                     type: string
-    delete:
-      tags:
-        - Auth
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                token:
-                  type: string
-      responses:
-        204:
-          description: No content
-
-
-  /device:
-    get:
-      tags:
-      - Device
-      summary: Get list of device
-      operationId: getDevices
-      responses:
-        200:
-          description: Ok
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Device'
         401:
-          description: Unauthorized
-          content: {}
-    post:
-      tags:
-      - Device
-      summary: Add device
-      operationId: addDevice
-      responses:
-        200:
-          description: OK (new device send via WS with event 'device_created'. Device schema is below)
+          description: Fail to authenticate to HA
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  id:
+                  error:
                     type: string
-                  name: 
-                    type: string
-                  model:
-                    type: string
-                  entities:
-                    type: array
-                    items:
-                      type: string
-                  automations:
-                    type: array
-                    items:
-                      type: string    
-        401:
-          description: Unauthorized
-          content: {}
-  /device/{deviceId}:
-    get:
-      tags:
-      - Device
-      summary: Find device by ID
-      description: Returns a single device
-      operationId: getDeviceById
-      parameters:
-      - name: deviceId
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Device'
-        400:
-          description: Invalid ID supplied
-          content: {}
-        404:
-          description: Not found
-          content: {}
-    put:
-      tags:
-      - Device
-      summary: Modify device by ID
-      operationId: modifyDeviceById
-      parameters:
-      - name: deviceId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:          
-                  type: string
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Device'
-        400:
-          description: Invalid ID supplied
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
-    patch:
-      tags:
-      - Device
-      summary: Enable/Disable device by ID
-      operationId: activateDeviceById
-      parameters:
-      - name: deviceId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                activated:          
-                  type: string
-      responses:
-        204:
-          description: OK
-          content: {}
-        400:
-          description: Invalid ID supplied
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
-  /entity:
-    get:
-      tags:
-      - Entity
-      summary: Get list of entity
-      operationId: getEntities
-      parameters:
-        - in: query
-          name: type
-          required: false
-          schema:
-            type: string
-          description: A device type used to filter the result ('light', 'sensor', ...)
-      responses:
-        200:
-          description: Ok
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Entity'
-        401:
-          description: Unauthorized
-          content: {}
-  /entity/types:
-    get:
-      tags:
-      - Entity
-      summary: Get a list of all entities types currently used in HA
-      operationId: getEntitiesTypes
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items: 
-                  type: string
-                default: ["person","sun", "group", "zone","binary_sensor","switch","sensor","automation","weather","media_player","light","zwave", "persistent_notification" ]
-  /entity/{entityId}:
-    get:
-      tags:
-      - Entity
-      summary: Get entity from ID
-      operationId: getEntityById
-      parameters:
-      - name: entityId
-        in: path
-        description: ID of entity to return
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Entity'
-        401:
-          description: Unauthorized
-          content: {}
-        404:
-          description: Not found
-          content: {}
-    patch:
-      tags:
-      - Entity
-      summary: Enable/Disable entity by ID
-      operationId: activateEntityById
-      parameters:
-      - name: entityId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                enable:
-                  type: boolean
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Entity'
-        400:
-          description: Invalid ID supplied
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
-    put:
-      tags:
-      - Entity
-      summary: Modify entity by ID
-      operationId: modifyEntityById
-      parameters:
-      - name: entityId
-        in: path
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                service:
-                  type: string
-                  default: light.turn_on
-                serviceData:
-                  type: object
-                  default: { brightness: 35 }
-      responses:
-        200:
-          description: OK (TODO check response)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Entity'
-        400:
-          description: Invalid ID supplied
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
-  
+
   /automation:
     get:
       tags:
       - Automation
-      summary: Get list of automation
+      summary: Get the automations list
       operationId: getAutomations
       responses:
         200:
@@ -377,7 +61,7 @@ paths:
       operationId: addAutomations
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/Automation'
       responses:
@@ -386,20 +70,59 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Automation'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    nullable: true
+                  result:
+                    type: string
+                    nullable: true
         401:
           description: Unauthorized
           content: {}
-  /automation/{automationId}:
+    patch:
+      tags:
+      - Automation
+      summary: Update an automation
+      operationId: updateAutomationById
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Automation'
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Ok
+
+        400:
+          description: Error
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        401:
+          description: Unauthorized
+          content: {}
+  /automation/{id}:
     get:
       tags:
       - Automation
       summary: Get Automation by ID
       operationId: getAutomationById
       parameters:
-      - name: automationId
+      - name: id
         in: path
         description: ID of automation to return
         required: true
@@ -417,52 +140,24 @@ paths:
           content: {}
         404:
           description: Not found
-          content: {}
-    put:
-      tags:
-      - Automation
-      summary: Modify automation by ID
-      operationId: modifyAutomationById
-      parameters:
-      - name: automationId
-        in: path
-        description: ID of automation to modify
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          '*/*':
-            schema:
-              $ref: '#/components/schemas/Automation'
-      responses:
-        200:
-          description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Automation'
-        400:
-          description: Invalid ID supplied
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
+                type: object
+                properties:
+                  error:
+                    type: string
+
+    
     patch:
       tags:
       - Automation
-      summary: Enable/Disable automation by ID
-      description: Enable/Disable automation by ID
+      summary: toggle automation by ID
+      description: toggle automation by ID
       parameters:
-      - name: automationId
+      - name: id
         in: path
-        description: ID of automation to enable/disable
+        description: ID of automation to toggle
         required: true
         schema:
           type: string
@@ -475,7 +170,7 @@ paths:
               properties:
                 state:
                   type: string
-                  example: 'on'
+                  example: 'on | off'
       responses:
         200:
           description: OK 
@@ -516,18 +211,13 @@ paths:
         401:
           description: Unauthorized
           content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
-  /room:
+  
+  /device:
     get:
       tags:
-      - Room
-      summary: Get list of room
-      operationId: getRooms
+      - Device
+      summary: Get list of device
+      operationId: getDevices
       responses:
         200:
           description: Ok
@@ -536,123 +226,302 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Room'
+                  $ref: '#/components/schemas/Device'
         401:
           description: Unauthorized
           content: {}
     post:
       tags:
-      - Room
-      summary: Create a room
-      operationId: addRoom
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-              
+      - Device
+      summary: Add device
+      operationId: addDevice
       responses:
         200:
-          description: Ok
+          description: OK (new device send via WS with event 'device_created'. Device schema is below)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Room'
+                type: array
+                items:
+                  type: object
+                  properties:
+                      '[protocol: string]':
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                          error:
+                            type: string
+                            nullable: true
         401:
           description: Unauthorized
           content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
-  /room/{roomId}:
+  /device/{deviceId}:
     get:
       tags:
-      - Room
-      summary: Get room from Id
-      operationId: getRoomById
+      - Device
+      summary: Find device by ID
+      description: Returns a single device
+      operationId: getDeviceById
       parameters:
-      - name: roomId
+      - name: deviceId
         in: path
-        description: ID of room to return
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Room'
-        401:
-          description: Unauthorized
-          content: {}
-        404:
-          description: Not found
-          content: {}
-    put:
-      tags:
-      - Room
-      summary: Update room from Id
-      operationId: updateRoomById
-      parameters:
-      - name: roomId
-        in: path
-        description: ID of room to update
-        required: true
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                room_id:
-                  type: string
-                name:
-                  type: string
-                devices:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/Device'
-      responses:
-        200:
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Room'
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
-    delete:
-      tags:
-      - Room
-      summary: Delete room by ID
-      operationId: deleteRoomById
-      parameters:
-      - name: roomId
-        in: path
-        description: ID of room to delete
         required: true
         schema:
           type: string
       responses:
         200:
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    # put:
+    #   tags:
+    #   - Device
+    #   summary: Modify device by ID
+    #   operationId: modifyDeviceById
+    #   parameters:
+    #   - name: deviceId
+    #     in: path
+    #     required: true
+    #     schema:
+    #       type: string
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           type: object
+    #           properties:
+    #             name:          
+    #               type: string
+    #   responses:
+    #     200:
+    #       description: OK
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Device'
+    #     400:
+    #       description: Invalid ID supplied
+    #       content: {}
+    #     401:
+    #       description: Unauthorized
+    #       content: {}
+    #     403:
+    #       description: Forbidden
+    #       content: {}
+    #     404:
+    #       description: Not found
+    #       content: {}
+    # patch:
+    #   tags:
+    #   - Device
+    #   summary: Enable/Disable device by ID
+    #   operationId: activateDeviceById
+    #   parameters:
+    #   - name: deviceId
+    #     in: path
+    #     required: true
+    #     schema:
+    #       type: string
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           type: object
+    #           properties:
+    #             activated:          
+    #               type: string
+    #   responses:
+    #     204:
+    #       description: OK
+    #       content: {}
+    #     400:
+    #       description: Invalid ID supplied
+    #       content: {}
+    #     401:
+    #       description: Unauthorized
+    #       content: {}
+    #     403:
+    #       description: Forbidden
+    #       content: {}
+    #     404:
+    #       description: Not found
+    #       content: {}
+  /entity:
+    get:
+      tags:
+      - Entity
+      summary: Get list of entity
+      operationId: getEntities
+      parameters:
+        - in: query
+          name: type
+          required: false
+          schema:
+            type: string
+          description: Filter by type
+          example: 'light | sensor | automation'
+        - in: query
+          name: "userId"
+          required: false
+          schema:
+            type: string
+          description: Filter by user
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Entity'
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /entity/types:
+    get:
+      tags:
+      - Entity
+      summary: Get a list of entities types currently used in HA
+      operationId: getEntitiesTypes
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  type: string
+                default: ["sun", "group", "binary_sensor","switch","sensor","automation","light"]
+  /entity/{entityId}:
+    get:
+      tags:
+      - Entity
+      summary: Get entity by ID
+      operationId: getEntityById
+      parameters:
+      - name: id
+        in: path
+        description: ID of entity to return
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        401:
+          description: Unauthorized
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    patch:
+      tags:
+      - Entity
+      summary: Enable/Disable entity by ID
+      operationId: activateEntityById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enable:
+                  type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        401:
+          description: Unauthorized
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      tags:
+      - Entity
+      summary: Modify entity by ID
+      operationId: modifyEntityById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                service:
+                  type: string
+                  default: light.turn_on
+                serviceData:
+                  type: object
+                  default: { brightness: 35 }
+      responses:
+        200:
+          description: OK (TODO check response)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
         400:
           description: Invalid ID supplied
           content: {}
@@ -665,11 +534,52 @@ paths:
         404:
           description: Not found
           content: {}
+  /entity/update/:id:
+    patch:
+      tags:
+      - Entity
+      summary: Update entity name
+      operationId: updateEntityById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+        401:
+          description: Unauthorized
+          content: {}
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+## GROUP #####################################################################
   /group:
     get:
       tags:
       - Group
-      summary: Get list of group
+      summary: Get groups
       operationId: getGroups
       responses:
         200:
@@ -690,9 +600,15 @@ paths:
       operationId: addGroup
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
-              $ref: '#/components/schemas/Group'
+              properties:
+                name:
+                  type: string
+                entities:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Entity'
       responses:
         200:
           description: Ok
@@ -702,18 +618,20 @@ paths:
                 $ref: '#/components/schemas/Group'
         401:
           description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
+        400:
+          description: Missing parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   /group/{groupId}:
     get:
       tags:
       - Group
-      summary: Get group from Id
+      summary: Get group by Id
       operationId: getGroupById
       parameters:
       - name: groupId
@@ -731,50 +649,65 @@ paths:
                 $ref: '#/components/schemas/Group'
         401:
           description: Unauthorized
-          content: {}
+        400:
+          description: Missing parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
         404:
-          description: Not found
-          content: {}
+          description: No such id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     put:
       tags:
       - Group
-      summary: Update group from Id
+      summary: Update group by Id
       operationId: updateGroupById
-      parameters:
-      - name: groupId
-        in: path
-        description: ID of group to update
-        required: true
-        schema:
-          type: string
       requestBody:
         content:
-          '*/*':
+          application/json:
             schema:
               $ref: '#/components/schemas/Group'
+              required: true
       responses:
         200:
           description: Ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Group'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: 'OK'
         401:
           description: Unauthorized
           content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
+        400:
+          description: Missing parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     delete:
       tags:
       - Group
       summary: Delete group by ID
       operationId: deleteGroupById
       parameters:
-      - name: roomId
+      - name: groupId
         in: path
         description: ID of group to delete
         required: true
@@ -782,19 +715,233 @@ paths:
           type: string
       responses:
         200:
-          description: OK
-        400:
-          description: Invalid ID supplied
-          content: {}
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: 'OK'
         401:
           description: Unauthorized
           content: {}
-        403:
-          description: Forbidden
+        400:
+          description: Missing parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        404:
+          description: No such id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+## HEALTH ################################################################################
+  /health:
+    get:
+      tags:
+      - Health
+      summary: Get server health
+      operationId: getHealth
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  healthy:
+                    type: boolean
+                    default: true
+## ROOM ################################################################################
+  /room:
+    get:
+      tags:
+      - Room
+      summary: Get list of room
+      operationId: getRooms
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+        401:
+          description: Unauthorized
+    post:
+      tags:
+      - Room
+      summary: Create a room
+      operationId: addRoom
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                devices:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/Device'
+              
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        401:
+          description: Unauthorized
+          content: {}
+        
+  /room/{roomId}:
+    get:
+      tags:
+      - Room
+      summary: Get room by Id
+      operationId: getRoomById
+      parameters:
+      - name: areaId
+        in: path
+        description: ID of room to return
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        401:
+          description: Unauthorized
           content: {}
         404:
+          description: No such id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    put:
+      tags:
+      - Room
+      summary: Update room by Id
+      operationId: updateRoomById
+      parameters:
+      - name: roomId
+        in: path
+        description: ID of room to update
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Room'
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: 'OK'
+        401:
+          description: Unauthorized
+        400:
+          description: Missing parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        404:
           description: Not found
-          content: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+    delete:
+      tags:
+      - Room
+      summary: Delete room by ID
+      operationId: deleteRoomById
+      parameters:
+      - name: roomId
+        in: path
+        description: ID of room to delete
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Room successfully deleted
+        400:
+          description: Missing parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        401:
+          description: Unauthorized
+
+# SERVICE #######################################################################################
+  /service:
+    get:
+      tags:
+      - Service
+      summary: Get the list of available services on entities
+      operationId: getServices
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+
+# USER #######################################################################################
   /user:
     get:
       tags:
@@ -844,21 +991,23 @@ paths:
                 $ref: '#/components/schemas/User'
         401:
           description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
+        400:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
   /user/{userId}:
     get:
       tags:
       - User
-      summary: Get user from Id
+      summary: Get user by Id
       operationId: getUserById
       parameters:
-      - name: userId
+      - name: id
         in: path
         description: ID of user to return
         required: true
@@ -873,17 +1022,22 @@ paths:
                 $ref: '#/components/schemas/User'
         401:
           description: Unauthorized
-          content: {}
-        404:
-          description: Not found
-          content: {}
+        400:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     put:
       tags:
       - User
-      summary: Update user from Id
+      summary: Update user by Id
       operationId: updateUserById
       parameters:
-      - name: userId
+      - name: id
         in: path
         description: ID of user to update
         required: true
@@ -918,12 +1072,15 @@ paths:
         401:
           description: Unauthorized
           content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
+        400:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
     delete:
       tags:
       - User
@@ -938,62 +1095,248 @@ paths:
           type: string
       responses:
         200:
-          description: OK
-        400:
-          description: Invalid ID supplied
-          content: {}
-        401:
-          description: Unauthorized
-          content: {}
-        403:
-          description: Forbidden
-          content: {}
-        404:
-          description: Not found
-          content: {}
-  
-  /manual/{ean}:
-    get:
-      tags:
-      - Manual
-      summary: Get manual from EAN product
-      parameters:
-      - name: ean
-        in: path
-        description: ean of product
-        required: true
-        schema:
-          type: string
-      responses:
-        200:
-          description: OK
+          description: Ok
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  result:
+                  message:
                     type: string
-              
+                    default: ok 
+        401:
+          description: Unauthorized
         400:
-          description: Invalid EAN supplied
-          content: {}
-        404:
-          description: Not found
-          content: {}
-
-  /service:
+          description: Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /user/lock:
+    post:
+      tags:
+      - User
+      summary: Lock the application
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Room successfully deleted
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /user/unlock:
+    post:
+      tags:
+      - User
+      summary: Unlock the application
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: boolean
+        401:
+          description: Unauthorized
+  /user/isLocked:
     get:
-      tags: 
-      - Service
-      summary: Get available services to control devices
+      tags:
+      - User
+      summary: Check if application is locked
+      responses:
+        200:
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: boolean
+# WebSocket ##################################################################################
+
+# Automations ##############################################
+  /websocket/onAutomationCreated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the created automation
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Service'
+                $ref: '#/components/schemas/AutomationPreview'
+  /websocket/onAutomationUpdated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the updated automation
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutomationPreview'
+  /websocket/onAutomationDeleted:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the id of a deleted automation
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: string
+# DEVICE ##################################################
+  /websocket/onDeviceCreated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the created device
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+
+# Entity ##################################################
+  /websocket/onEntityCreated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the created entity
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+  /websocket/onEntityUpdated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the updated entity
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Entity'
+
+# Group ###################################################
+  /websocket/onGroupCreated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the created group
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+  /websocket/onGroupUpdated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the updated group
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+  /websocket/onGroupDeleted:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the deleted group
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: string
+# Room ###################################################
+  /websocket/onRoomCreated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the created group
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+  /websocket/onRoomUpdated:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the updated group
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+  /websocket/onRoomDeleted:
+    get:
+      tags:
+      - WebSocket
+      summary: Websocket event through socket.io
+      description: Send the deleted group
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: string
 components:
   schemas:
     Device:
@@ -1073,10 +1416,21 @@ components:
           type: string
         name:
           type: string
-        devices:
+        entities:
           type: array
           items:
             $ref: '#/components/schemas/Entity'
+        implicit:
+          type: boolean
+        state:
+          type: string
+        room:
+          schema:
+          $ref: '#/components/schemas/Room'
+          nullable: true
+        type: 
+          type: string
+          nullable: true
     Automation:
       type: object
       properties:
